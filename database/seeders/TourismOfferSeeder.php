@@ -103,11 +103,11 @@ class TourismOfferSeeder extends Seeder
 
                 // Payment Methods (add bilingual descriptions)
                 'payment_methods' => json_encode([
-                    [
-                        'name_en' => 'Al Rajhi Bank',
-                        'name_ar' => 'مصرف الراجحي',
-                        'iban' => 'SA67 8000 0189 6080 1000 4821',
-                    ],
+                    // [
+                    //     'name_en' => 'Al Rajhi Bank',
+                    //     'name_ar' => 'مصرف الراجحي',
+                    //     'iban' => 'SA67 8000 0189 6080 1000 4821',
+                    // ],
                     [
                         'name_en' => 'STC Pay',
                         'name_ar' => 'إس تي سي باي',
@@ -190,12 +190,7 @@ class TourismOfferSeeder extends Seeder
                     'email' => 'info@tilalr.com',
                 ]),
                 'payment_methods' => json_encode([
-                    [
-                        'name_en' => 'Al Rajhi Bank',
-                        'name_ar' => 'مصرف الراجحي',
-                        'account_no' => '1111',
-                        'iban' => '111',
-                    ],
+                 
                     [
                         'name_en' => 'Apple Pay',
                         'name_ar' => 'آبل باي',
@@ -272,12 +267,7 @@ class TourismOfferSeeder extends Seeder
                     'email' => 'info@tilalr.com',
                 ]),
                 'payment_methods' => json_encode([
-                    [
-                        'name_en' => 'Al Rajhi Bank',
-                        'name_ar' => 'مصرف الراجحي',
-                        'account_no' => '11111111',
-                        'iban' => '1111111111111',
-                    ],
+                 
                     [
                         'name_en' => 'Mada Card',
                         'name_ar' => 'بطاقة مدى',
@@ -352,12 +342,7 @@ class TourismOfferSeeder extends Seeder
                     'email' => 'info@tilalr.com',
                 ]),
                 'payment_methods' => json_encode([
-                    [
-                        'name_en' => 'Al Rajhi Bank',
-                        'name_ar' => 'مصرف الراجحي',
-                        'account_no' => '11111111',
-                        'iban' => '1111111111111',
-                    ],
+                  
                 ]),
                 'type' => 'domestic',
                 'active' => true,

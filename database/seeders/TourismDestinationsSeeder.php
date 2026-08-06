@@ -17,12 +17,7 @@ class TourismDestinationsSeeder extends Seeder
     ];
 
     private $commonPaymentMethods = [
-        [
-            'name_en' => 'Al Rajhi Bank',
-            'name_ar' => 'مصرف الراجحي',
-            'account_no' => '11111111',
-            'iban' => 'SA1111111111111',
-        ],
+     
         [
             'name_en' => 'STC Pay',
             'name_ar' => 'إس تي سي باي',
