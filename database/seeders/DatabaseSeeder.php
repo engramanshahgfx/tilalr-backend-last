@@ -11,9 +11,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ContactInfoSeeder::class,
             TrainingSeeder::class,
+            PermissionSeeder::class,
             CreateSuperAdminSeeder::class,
             RolePermissionSeeder::class,
-            // PermissionSeeder::class, // ← COMMENT THIS OUT
             TourismOfferSeeder::class,
             TourismDestinationsSeeder::class,
         ]);

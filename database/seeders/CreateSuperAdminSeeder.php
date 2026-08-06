@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
 class CreateSuperAdminSeeder extends Seeder
@@ -12,6 +13,16 @@ class CreateSuperAdminSeeder extends Seeder
     {
         $email = 'superadmin@tilalr.com';
         $password = 'superadmin123';
+
+        // Ensure super_admin role exists
+        $role = Role::firstOrCreate(
+            ['name' => 'super_admin'],
+            [
+                'display_name' => 'Super Admin',
+                'description' => 'Full administrative access to all features',
+                'is_active' => true,
+            ]
+        );
 
         // If a user already has the target email, make that the superadmin and demote others
         $existingByEmail = User::where('email', $email)->first();
@@ -25,7 +36,9 @@ class CreateSuperAdminSeeder extends Seeder
             // Demote any other admins
             User::where('id', '!=', $existingByEmail->id)->where('is_admin', true)->update(['is_admin' => false]);
 
-            echo "Set existing user {$email} as Super Admin (password updated to: {$password})\n";
+            $existingByEmail->roles()->syncWithoutDetaching([$role->id]);
+
+            echo "Set existing user {$email} as Super Admin and assigned super_admin role (password updated to: {$password})\n";
             return;
         }
 
@@ -41,7 +54,9 @@ class CreateSuperAdminSeeder extends Seeder
             // Demote any other admins (shouldn't be necessary but keep it safe)
             User::where('id', '!=', $currentAdmin->id)->where('is_admin', true)->update(['is_admin' => false]);
 
-            echo "Updated existing Super Admin email to: {$email} (password updated to: {$password})\n";
+            $currentAdmin->roles()->syncWithoutDetaching([$role->id]);
+
+            echo "Updated existing Super Admin email to: {$email} and assigned super_admin role (password updated to: {$password})\n";
             return;
         }
 
@@ -53,6 +68,8 @@ class CreateSuperAdminSeeder extends Seeder
             'is_admin' => true,
         ]);
 
-        echo "Created Super Admin: {$email} with password: {$password}\n";
+        $user->roles()->syncWithoutDetaching([$role->id]);
+
+        echo "Created Super Admin: {$email} with password: {$password} and assigned super_admin role\n";
     }
 }
