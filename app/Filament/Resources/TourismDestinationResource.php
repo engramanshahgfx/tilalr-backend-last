@@ -95,13 +95,9 @@ class TourismDestinationResource extends Resource
                                         Forms\Components\Textarea::make('description_en')
                                             ->label('Short Description (English)')
                                             ->rows(3),
-                                        Forms\Components\RichEditor::make('long_description_en')
+                                        Forms\Components\Textarea::make('long_description_en')
                                             ->label('Long Description (English)')
-                                            ->toolbarButtons([
-                                                'bold', 'italic', 'underline', 'strike',
-                                                'blockquote', 'bulletList', 'orderedList',
-                                                'link', 'image', 'undo', 'redo',
-                                            ]),
+                                            ->rows(6),
                                         Forms\Components\TextInput::make('location_en')
                                             ->label('Location (English)')
                                             ->maxLength(255),
@@ -167,13 +163,9 @@ class TourismDestinationResource extends Resource
                                         Forms\Components\Textarea::make('description_ar')
                                             ->label('Short Description (Arabic)')
                                             ->rows(3),
-                                        Forms\Components\RichEditor::make('long_description_ar')
+                                        Forms\Components\Textarea::make('long_description_ar')
                                             ->label('Long Description (Arabic)')
-                                            ->toolbarButtons([
-                                                'bold', 'italic', 'underline', 'strike',
-                                                'blockquote', 'bulletList', 'orderedList',
-                                                'link', 'image', 'undo', 'redo',
-                                            ]),
+                                            ->rows(6),
                                         Forms\Components\TextInput::make('location_ar')
                                             ->label('Location (Arabic)')
                                             ->maxLength(255),

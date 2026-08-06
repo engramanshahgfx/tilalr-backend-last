@@ -89,13 +89,9 @@ class TourismOfferResource extends Resource
                                             ->rows(3)
                                             ->maxLength(500),
 
-                                        RichEditor::make('long_description_en')
+                                        Textarea::make('long_description_en')
                                             ->label('Long Description (English)')
-                                            ->toolbarButtons([
-                                                'bold', 'italic', 'underline', 'strike',
-                                                'blockquote', 'bulletList', 'orderedList',
-                                                'link', 'image', 'undo', 'redo',
-                                            ]),
+                                            ->rows(6),
 
                                         TextInput::make('duration_en')
                                             ->label('Duration (English)')
@@ -231,13 +227,9 @@ class TourismOfferResource extends Resource
                                             ->rows(3)
                                             ->maxLength(500),
 
-                                        RichEditor::make('long_description_ar')
+                                        Textarea::make('long_description_ar')
                                             ->label('Long Description (Arabic)')
-                                            ->toolbarButtons([
-                                                'bold', 'italic', 'underline', 'strike',
-                                                'blockquote', 'bulletList', 'orderedList',
-                                                'link', 'image', 'undo', 'redo',
-                                            ]),
+                                            ->rows(6),
 
                                         TextInput::make('duration_ar')
                                             ->label('Duration (Arabic)')
