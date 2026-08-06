@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class TourismOffer extends Model
 {
     use HasFactory, \App\Traits\LogsActivity;
 
     protected $table = 'tourism_offers';
+
+    protected $appends = ['image_url'];
 
     protected $fillable = [
         'title_en',
@@ -286,5 +289,42 @@ class TourismOffer extends Model
         } else {
             $this->attributes['payment_methods'] = null;
         }
+    }
+
+    public function getImageUrlAttribute()
+    {
+        $image = $this->image;
+        if (!$image) {
+            return null;
+        }
+
+        if (filter_var($image, FILTER_VALIDATE_URL)) {
+            return $image;
+        }
+
+        $clean = ltrim($image, '/');
+        if (str_starts_with($clean, 'storage/')) {
+            $clean = substr($clean, 8);
+        }
+
+        if (Storage::disk('public')->exists($clean)) {
+            return asset('storage/' . $clean);
+        }
+
+        if (!str_starts_with($clean, 'offers/')) {
+            if (Storage::disk('public')->exists('offers/' . $clean)) {
+                return asset('storage/offers/' . $clean);
+            }
+        }
+
+        if (file_exists(public_path('storage/' . $clean))) {
+            return asset('storage/' . $clean);
+        }
+
+        if (file_exists(public_path('storage/offers/' . $clean))) {
+            return asset('storage/offers/' . $clean);
+        }
+
+        return asset('storage/' . $clean);
     }
 }

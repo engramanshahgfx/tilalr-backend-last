@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class TourismDestination extends Model
 {
     use HasFactory;
 
     protected $table = 'tourism_destinations';
+
+    protected $appends = ['image_url'];
 
     protected $fillable = [
         'slug',
@@ -197,5 +200,42 @@ class TourismDestination extends Model
             return json_decode($value, true) ?? $this->itinerary_en ?? [];
         }
         return $value ?? $this->itinerary_en ?? [];
+    }
+
+    public function getImageUrlAttribute()
+    {
+        $image = $this->image;
+        if (!$image) {
+            return null;
+        }
+
+        if (filter_var($image, FILTER_VALIDATE_URL)) {
+            return $image;
+        }
+
+        $clean = ltrim($image, '/');
+        if (str_starts_with($clean, 'storage/')) {
+            $clean = substr($clean, 8);
+        }
+
+        if (Storage::disk('public')->exists($clean)) {
+            return asset('storage/' . $clean);
+        }
+
+        if (!str_starts_with($clean, 'tourism/')) {
+            if (Storage::disk('public')->exists('tourism/' . $clean)) {
+                return asset('storage/tourism/' . $clean);
+            }
+        }
+
+        if (file_exists(public_path('storage/' . $clean))) {
+            return asset('storage/' . $clean);
+        }
+
+        if (file_exists(public_path('storage/tourism/' . $clean))) {
+            return asset('storage/tourism/' . $clean);
+        }
+
+        return asset('storage/' . $clean);
     }
 }

@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class JamoulaOffer extends Model
 {
     use HasFactory, \App\Traits\LogsActivity;
 
     protected $table = 'jamoula_offers';
+
+    protected $appends = ['image_url'];
 
     protected $fillable = [
         'title_en',
@@ -93,15 +96,37 @@ class JamoulaOffer extends Model
 
     public function getImageUrlAttribute()
     {
-        if (!$this->image) {
+        $image = $this->image;
+        if (!$image) {
             return null;
         }
 
-        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
-            return $this->image;
+        if (filter_var($image, FILTER_VALIDATE_URL)) {
+            return $image;
         }
 
-        return asset('storage/' . ltrim($this->image, '/'));
+        $clean = ltrim($image, '/');
+        if (str_starts_with($clean, 'storage/')) {
+            $clean = substr($clean, 8);
+        }
+
+        if (Storage::disk('public')->exists($clean)) {
+            return asset('storage/' . $clean);
+        }
+
+        foreach (['jamoula-offers/', 'offers/', 'tourism/'] as $folder) {
+            if (!str_starts_with($clean, $folder)) {
+                if (Storage::disk('public')->exists($folder . $clean)) {
+                    return asset('storage/' . $folder . $clean);
+                }
+            }
+        }
+
+        if (file_exists(public_path('storage/' . $clean))) {
+            return asset('storage/' . $clean);
+        }
+
+        return asset('storage/' . $clean);
     }
 
     public function tourismOffer()

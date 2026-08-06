@@ -70,7 +70,7 @@ class TourismDestinationController extends Controller
 
     private function formatDestination($destination)
     {
-        $destination->image_url = $this->getImageUrl($destination->image);
+        $destination->image_url = $destination->image_url ?? $this->getImageUrl($destination->image);
         return $destination;
     }
 
@@ -80,22 +80,34 @@ class TourismDestinationController extends Controller
             return null;
         }
 
-        // If it's already a full URL
         if (filter_var($image, FILTER_VALIDATE_URL)) {
             return $image;
         }
 
-        // Check if the file exists in storage
-        if (Storage::disk('public')->exists('tourism/' . $image)) {
-            return asset('storage/tourism/' . $image);
+        $clean = ltrim($image, '/');
+        if (str_starts_with($clean, 'storage/')) {
+            $clean = substr($clean, 8);
         }
 
-        // Check if the file exists directly in public
-        if (file_exists(public_path('storage/tourism/' . $image))) {
-            return asset('storage/tourism/' . $image);
+        if (Storage::disk('public')->exists($clean)) {
+            return asset('storage/' . $clean);
         }
 
-        return null;
+        if (!str_starts_with($clean, 'tourism/')) {
+            if (Storage::disk('public')->exists('tourism/' . $clean)) {
+                return asset('storage/tourism/' . $clean);
+            }
+        }
+
+        if (file_exists(public_path('storage/' . $clean))) {
+            return asset('storage/' . $clean);
+        }
+
+        if (file_exists(public_path('storage/tourism/' . $clean))) {
+            return asset('storage/tourism/' . $clean);
+        }
+
+        return asset('storage/' . $clean);
     }
 
     public function getNavbarData()
