@@ -123,6 +123,16 @@ class PaymentController extends Controller
             }
 
 
+            if ($status === 401) {
+                $errorMsg = $result['message'] ?? 'Moyasar authentication failed. Please check API keys or IP Whitelisting in Moyasar Dashboard.';
+                Log::error('Moyasar 401 Authentication Error:', ['message' => $errorMsg, 'result' => $result]);
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMsg,
+                    'debug' => $result
+                ], 401);
+            }
+
             if ($status === 400 && isset($result['type']) && $result['type'] === 'validation_error') {
                 Log::warning('Moyasar requires card fields for this account:', $result);
                 return response()->json([
@@ -214,18 +224,53 @@ class PaymentController extends Controller
     {
         $booking = Booking::where('id', $id)
             ->orWhere('booking_number', $id)
+            ->orWhere('payment_id', $id)
             ->first();
 
         if (!$booking) {
             return response()->json([
                 'success' => false,
+                'is_paid' => false,
                 'message' => 'Booking not found'
             ], 404);
         }
 
+        // If payment status in database is not paid yet, but a payment_id exists, try verifying directly with Moyasar API
+        if ($booking->payment_status !== 'paid' && $booking->payment_id) {
+            try {
+                $moyasarKey = env('MOYASAR_SECRET_KEY');
+                if ($moyasarKey) {
+                    $response = Http::withBasicAuth($moyasarKey, '')
+                        ->withOptions(['verify' => false])
+                        ->get("https://api.moyasar.com/v1/payments/{$booking->payment_id}");
+
+                    if ($response->successful()) {
+                        $moyasarData = $response->json();
+                        $moyasarStatus = strtolower($moyasarData['status'] ?? '');
+                        if (in_array($moyasarStatus, ['paid', 'captured'])) {
+                            $booking->update([
+                                'payment_status' => 'paid',
+                                'status' => 'confirmed',
+                            ]);
+                        } else if ($moyasarStatus === 'failed') {
+                            $booking->update([
+                                'payment_status' => 'failed',
+                            ]);
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::warning('Moyasar direct verification check failed: ' . $e->getMessage());
+            }
+        }
+
+        $isPaid = in_array(strtolower($booking->payment_status ?? ''), ['paid', 'captured', 'completed', 'confirmed']);
+
         return response()->json([
             'success' => true,
+            'is_paid' => $isPaid,
             'data' => [
+                'id' => $booking->id,
                 'booking_number' => $booking->booking_number,
                 'payment_status' => $booking->payment_status,
                 'status' => $booking->status,
