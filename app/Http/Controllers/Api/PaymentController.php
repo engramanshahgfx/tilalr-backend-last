@@ -17,7 +17,7 @@ class PaymentController extends Controller
 
         $validator = Validator::make($request->all(), [
             'booking_id' => 'required|integer|exists:bookings,id',
-            'amount' => 'required|numeric|min:1',
+            'amount' => 'nullable|numeric|min:1',
         ]);
 
         if ($validator->fails()) {
@@ -36,7 +36,8 @@ class PaymentController extends Controller
                 ], 404);
             }
 
-            $amountInHalalas = (int) round($request->amount * 100);
+            $rawAmount = $request->amount ?? $booking->total_amount ?? $booking->price ?? 1;
+            $amountInHalalas = (int) round($rawAmount * 100);
             if ($amountInHalalas < 100) $amountInHalalas = 100;
 
             $customerName = trim(($booking->first_name ?? '') . ' ' . ($booking->last_name ?? ''));
@@ -46,29 +47,37 @@ class PaymentController extends Controller
             }
 
             $lang = $request->lang ?? 'en';
-            $webhookUrl = env('APP_URL', 'http://localhost:8000') . '/api/payments/webhook/moyasar';
-            $successUrl = env('FRONTEND_URL', 'http://localhost:3000') . '/' . $lang . '/payment-success?booking_id=' . $booking->id;
-            $cancelUrl = env('FRONTEND_URL', 'http://localhost:3000') . '/' . $lang . '/payment-cancel?booking_id=' . $booking->id;
+            
+            // Dynamically detect frontend URL from request origin, referer, or env setting
+            $rawOrigin = $request->header('Origin') ?? $request->header('Referer') ?? env('FRONTEND_URL', 'https://tilalr.com');
+            $frontendUrl = env('FRONTEND_URL', 'https://tilalr.com');
 
-            $paymentData = [
+            if ($rawOrigin && filter_var($rawOrigin, FILTER_VALIDATE_URL)) {
+                $parsed = parse_url($rawOrigin);
+                if (isset($parsed['scheme']) && isset($parsed['host'])) {
+                    $port = isset($parsed['port']) ? ':' . $parsed['port'] : '';
+                    $frontendUrl = $parsed['scheme'] . '://' . $parsed['host'] . $port;
+                }
+            }
+            $frontendUrl = rtrim($frontendUrl, '/');
+
+            $successUrl = $frontendUrl . '/' . $lang . '/payment-success?booking_id=' . $booking->id;
+            $cancelUrl = $frontendUrl . '/' . $lang . '/payment-cancel?booking_id=' . $booking->id;
+
+            $invoiceData = [
                 'amount' => $amountInHalalas,
                 'currency' => 'SAR',
                 'description' => 'Booking #' . ($booking->booking_number ?? $booking->id),
+                'callback_url' => $successUrl,
+                'back_url' => $cancelUrl,
                 'metadata' => [
                     'booking_id' => $booking->id,
                     'customer_name' => $customerName,
                     'customer_email' => $booking->email ?? '',
                 ],
-                // Send the minimal required Moyasar source shape without any card details.
-                'source' => [
-                    'type' => 'creditcard',
-                ],
-                'callback_url' => $webhookUrl,
-                'redirect_url' => $successUrl,
-                'cancel_url' => $cancelUrl,
             ];
 
-            Log::info('Sending to Moyasar:', $paymentData);
+            Log::info('Sending to Moyasar Invoices API:', $invoiceData);
 
             $response = Http::withBasicAuth(env('MOYASAR_SECRET_KEY'), '')
                 ->withOptions([
@@ -76,12 +85,12 @@ class PaymentController extends Controller
                     'timeout' => 60,
                 ])
                 ->asJson()
-                ->post('https://api.moyasar.com/v1/payments', $paymentData);
+                ->post('https://api.moyasar.com/v1/invoices', $invoiceData);
 
             $status = $response->status();
             $result = $response->json();
 
-            Log::info('Moyasar response:', ['status' => $status, 'body' => $result]);
+            Log::info('Moyasar Invoices response:', ['status' => $status, 'body' => $result]);
 
             if ($status === 200 || $status === 201) {
                 if (isset($result['id'])) {
@@ -91,11 +100,11 @@ class PaymentController extends Controller
                         'transaction_id' => $result['id'],
                     ]);
 
-                    // Prefer the public hosted URL fields Moyasar returns.
-                    $paymentUrl = data_get($result, 'source.transaction_url')
-                        ?? $result['transaction_url']
-                        ?? $result['url']
-                        ?? null;
+                    // Moyasar Hosted Invoice URL (e.g. https://checkout.moyasar.com/invoices/xxxx?lang=en)
+                    $paymentUrl = $result['url'] ?? null;
+                    if ($paymentUrl && strpos($paymentUrl, 'lang=') === false) {
+                        $paymentUrl .= (strpos($paymentUrl, '?') !== false ? '&' : '?') . 'lang=' . $lang;
+                    }
 
                     if ($paymentUrl) {
                         return response()->json([
@@ -107,16 +116,13 @@ class PaymentController extends Controller
 
                     return response()->json([
                         'success' => false,
-                        'message' => 'Payment created but no hosted URL returned by Moyasar.',
+                        'message' => 'Invoice created but no hosted URL returned by Moyasar.',
                         'debug' => $result,
                     ], 500);
                 }
             }
 
-            // If the gateway responds with a validation error that requests
-            // card fields when we intentionally did not send them, return
-            // that validation message back to the frontend so the integrator
-            // can decide how to proceed (do NOT send dummy card details).
+
             if ($status === 400 && isset($result['type']) && $result['type'] === 'validation_error') {
                 Log::warning('Moyasar requires card fields for this account:', $result);
                 return response()->json([

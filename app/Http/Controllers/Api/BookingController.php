@@ -58,7 +58,7 @@ class BookingController extends Controller
         $basicInfo = [];
 
         if ($bookingType === 'tourism_offer') {
-            // For tourism offers, try to find in database but don't require it
+            // For tourism offers, try to find in database
             $package = TourismOffer::where('id', $request->package_id)
                 ->orWhere('slug', $request->package_id)
                 ->first();
@@ -66,28 +66,29 @@ class BookingController extends Controller
             if ($package) {
                 $packageTitle = $package->title_en ?? $package->title_ar ?? 'Tourism Offer';
                 $packagePrice = floatval($package->price ?? 0);
-                $singleSupplementPrice = floatval($package->single_room_price ?? $packagePrice);
             } else {
                 $packageTitle = $request->package_title ?? 'Tourism Offer';
                 $packagePrice = floatval($request->price ?? $request->total_amount ?? 0);
-                $singleSupplementPrice = floatval($request->price ?? $request->total_amount ?? 0);
             }
         } else {
-            // For destinations, require the package to exist
+            // For destinations, try TourismDestination first, then TourismOffer fallback
             $package = TourismDestination::where('id', $request->package_id)
                 ->orWhere('slug', $request->package_id)
                 ->first();
 
+            if (!$package) {
+                $package = TourismOffer::where('id', $request->package_id)
+                    ->orWhere('slug', $request->package_id)
+                    ->first();
+            }
+
             if ($package) {
-                $packageTitle = $package->title_en ?? $package->title_ar ?? 'Destination';
+                $packageTitle = $package->title_en ?? $package->title_ar ?? $package->title ?? 'Destination';
                 $packagePrice = floatval($package->price ?? 0);
-                $singleSupplementPrice = floatval($package->single_room_price ?? $packagePrice);
             } else {
-                \Log::warning('Package not found for ID/Slug: ' . $request->package_id);
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Package not found'
-                ], 404);
+                // Fallback to requested package_title / price if package is not in DB table
+                $packageTitle = $request->package_title ?? 'Tourism Package';
+                $packagePrice = floatval($request->price ?? $request->total_amount ?? 0);
             }
         }
 
@@ -108,6 +109,8 @@ class BookingController extends Controller
             ], 422);
         }
 
+        $packageIdStr = (string) ($package ? $package->id : ($request->package_id ?? '1'));
+
         $booking = Booking::create([
             'booking_number' => Booking::generateBookingNumber(),
             'first_name' => $request->first_name,
@@ -116,8 +119,8 @@ class BookingController extends Controller
             'mobile' => $request->mobile,
             'travel_date' => $request->travel_date,
             'room_type' => $request->room_type,
-            'package_id' => (string) $package->id,
-            'package_code' => $request->package_code ?? 'PKG-' . $package->id,
+            'package_id' => $packageIdStr,
+            'package_code' => $request->package_code ?? 'PKG-' . $packageIdStr,
             'package_title' => $packageTitle,
             'price' => $price,
             'total_amount' => $totalAmount,

@@ -17,12 +17,11 @@ class TourismDestinationsSeeder extends Seeder
     ];
 
     private $commonPaymentMethods = [
-     
         [
-            'name_en' => 'STC Pay',
-            'name_ar' => 'إس تي سي باي',
-            'account_no' => '22222222',
-            'iban' => 'SA2222222222222',
+            'name_en' => 'Alinma Bank',
+            'name_ar' => 'بنك الإنماء',
+            'account_no' => '68205990876000',
+            'iban' => 'SA3705000068205990876000',
         ],
     ];
 

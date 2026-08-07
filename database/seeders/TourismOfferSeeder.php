@@ -103,16 +103,11 @@ class TourismOfferSeeder extends Seeder
 
                 // Payment Methods (add bilingual descriptions)
                 'payment_methods' => json_encode([
-                    // [
-                    //     'name_en' => 'Al Rajhi Bank',
-                    //     'name_ar' => 'مصرف الراجحي',
-                    //     'iban' => 'SA67 8000 0189 6080 1000 4821',
-                    // ],
                     [
-                        'name_en' => 'STC Pay',
-                        'name_ar' => 'إس تي سي باي',
-                        'account_no' => '2222',
-                        'iban' => '2222222',
+                        'name_en' => 'Alinma Bank',
+                        'name_ar' => 'بنك الإنماء',
+                        'account_no' => '68205990876000',
+                        'iban' => 'SA3705000068205990876000',
                     ],
                 ]),
 
