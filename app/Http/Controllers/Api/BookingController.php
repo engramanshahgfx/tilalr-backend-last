@@ -135,6 +135,23 @@ class BookingController extends Controller
             'special_requests' => $request->special_requests ?? '',
         ]);
 
+        // Process coupon redemption if coupon code was supplied
+        if ($request->filled('coupon_code')) {
+            $coupon = \App\Models\Coupon::where('code', strtoupper(trim($request->coupon_code)))->first();
+            if ($coupon) {
+                $discountAmount = floatval($request->discount_amount ?? 0);
+                \App\Models\CouponRedemption::create([
+                    'coupon_id' => $coupon->id,
+                    'user_id' => null,
+                    'booking_id' => $booking->id,
+                    'email' => $request->email,
+                    'discount_amount' => $discountAmount,
+                    'booking_amount' => $totalAmount,
+                ]);
+                $coupon->increment('uses_count');
+            }
+        }
+
         \Log::info('Guest booking created:', [
             'id' => $booking->id,
             'number' => $booking->booking_number,

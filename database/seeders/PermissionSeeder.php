@@ -47,6 +47,7 @@ class PermissionSeeder extends Seeder
             // Tourism & Offers
             'tourism_offers' => 'Saudi Offers',
             'tourism_destinations' => 'International Destinations',
+            'coupons' => 'Discount Coupons',
             'trips' => 'Trips',
             'offers' => 'Special Offers',
 

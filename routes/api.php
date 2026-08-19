@@ -25,10 +25,14 @@ use App\Http\Controllers\Api\SchengenController;
 use App\Http\Controllers\Api\SpecialOfferController;
 use App\Http\Controllers\Api\InternetPackageRequestController;
 use App\Http\Controllers\Api\PrivateJetRequestController;
+use App\Http\Controllers\Api\CouponController;
 
 Route::get('/test', function () {
     return response()->json(['status' => 'ok', 'message' => 'API routing works!']);
 });
+
+Route::post('/coupons/apply', [CouponController::class, 'apply']);
+Route::post('/v1/coupons/apply', [CouponController::class, 'apply']);
 
 Route::get('/health', [HealthController::class, 'check']);
 Route::get('/health/db', [HealthController::class, 'dbTest']);
