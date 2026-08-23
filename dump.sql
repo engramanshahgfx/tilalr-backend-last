@@ -1,5 +1,4 @@
-<USER_REQUEST>
-" i want remove my seeder data and replace with this "-- phpMyAdmin SQL Dump
+-- phpMyAdmin SQL Dump
 -- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
@@ -47,11 +46,7 @@ CREATE TABLE `about_sections` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
 
---
--- Table structure for table `app_settings`
---
 
 CREATE TABLE `app_settings` (
   `id` bigint(20) UNSIGNED NOT NULL,
@@ -742,7 +737,7 @@ CREATE TABLE `roles` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `allowed_modules` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '[]' CHECK (json_valid(`allowed_modules`))
+  `allowed_modules` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
