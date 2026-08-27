@@ -1,10 +1,8 @@
 # ==========================================
 # Tilalr Backend - Docker Compose (Development)
 # ==========================================
-# Run with: docker-compose up -d
+# Run with: docker compose up -d
 # ==========================================
-
-version: '3.8'
 
 services:
   # ===========================================
@@ -19,7 +17,7 @@ services:
     environment:
       APP_NAME: Tilalr
       APP_ENV: ${APP_ENV:-local}
-      APP_KEY: ${APP_KEY}
+      APP_KEY: ${APP_KEY:-base64:9t8anR7lo4UzSGi4GlOrAKbO52kHSJOAnWJAHdY/qVQ=}
       APP_DEBUG: ${APP_DEBUG:-true}
       APP_URL: ${APP_URL:-http://localhost:8000}
 
@@ -40,18 +38,18 @@ services:
 
       # Mail
       MAIL_MAILER: ${MAIL_MAILER:-log}
-      MAIL_HOST: ${MAIL_HOST}
+      MAIL_HOST: ${MAIL_HOST:-127.0.0.1}
       MAIL_PORT: ${MAIL_PORT:-587}
-      MAIL_USERNAME: ${MAIL_USERNAME}
-      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
       MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-tls}
       MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-noreply@tilalr.com}
       MAIL_FROM_NAME: ${MAIL_FROM_NAME:-Tilalr}
 
       # Stripe
-      STRIPE_KEY: ${STRIPE_KEY}
-      STRIPE_SECRET: ${STRIPE_SECRET}
-      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      STRIPE_KEY: ${STRIPE_KEY:-}
+      STRIPE_SECRET: ${STRIPE_SECRET:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
 
       # OTP & SMS Configuration
       OTP_MODE: ${OTP_MODE:-sms}
@@ -60,7 +58,7 @@ services:
       SMS_PROVIDER: ${SMS_PROVIDER:-taqnyat}
 
       # Taqnyat SMS Provider
-      TAQNYAT_BEARER_TOKEN: ${TAQNYAT_BEARER_TOKEN}
+      TAQNYAT_BEARER_TOKEN: ${TAQNYAT_BEARER_TOKEN:-}
       TAQNYAT_SENDER: ${TAQNYAT_SENDER:-Tilalr}
 
       # Auto migrate

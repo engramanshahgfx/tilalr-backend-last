@@ -434,13 +434,14 @@ class OtpService
     {
         $appUrl = config('app.url', 'https://tilalr.com');
         $domain = parse_url($appUrl, PHP_URL_HOST) ?? $appUrl;
+        $domain = preg_replace('/^admin\./i', '', $domain);
 
         $messages = [
-            'register' => "Your verification code is: {$code}\nfor {$domain}",
+            'register' => "Your login code is: {$code}\nfor {$domain}",
             'login' => "Your login code is: {$code}\nfor {$domain}",
         ];
 
-        $message = $messages[$type] ?? "Your verification code is: {$code}\nfor {$domain}";
+        $message = $messages[$type] ?? "Your login code is: {$code}\nfor {$domain}";
 
         if ($this->mode === 'sms') {
             // Full SMS mode - actually send via SMS provider

@@ -17,7 +17,7 @@ return new class extends Migration
             // Check if allowed_modules column exists
             if (!Schema::hasColumn('roles', 'allowed_modules')) {
                 Schema::table('roles', function (Blueprint $table) {
-                    $table->json('allowed_modules')->nullable()->default('[]');
+                    $table->json('allowed_modules')->nullable();
                 });
             }
 
