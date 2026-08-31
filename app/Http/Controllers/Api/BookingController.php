@@ -126,7 +126,7 @@ class BookingController extends Controller
             'total_amount' => $totalAmount,
             'status' => 'pending',
             'order_stat' => 'New',
-            'user_id' => null,
+            'user_id' => $request->user()?->id ?? null,
             'notes' => $request->notes,
             'payment_method' => $request->payment_method ?? 'credit_card',
             'payment_status' => 'pending',
@@ -142,7 +142,7 @@ class BookingController extends Controller
                 $discountAmount = floatval($request->discount_amount ?? 0);
                 \App\Models\CouponRedemption::create([
                     'coupon_id' => $coupon->id,
-                    'user_id' => null,
+                    'user_id' => $request->user()?->id ?? null,
                     'booking_id' => $booking->id,
                     'email' => $request->email,
                     'discount_amount' => $discountAmount,
@@ -166,6 +166,129 @@ class BookingController extends Controller
             'message' => 'Booking created successfully',
             'data' => $booking
         ], 201);
+    }
+
+    /**
+     * Store booking for authenticated / default route POST /api/bookings
+     */
+    public function store(Request $request)
+    {
+        return $this->guestStore($request);
+    }
+
+    /**
+     * Get list of bookings
+     */
+    public function index(Request $request)
+    {
+        $query = Booking::query();
+
+        if ($request->user() && !($request->user()->is_admin ?? false)) {
+            $query->where('user_id', $request->user()->id);
+        } elseif ($request->has('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('payment_status') && $request->payment_status) {
+            $query->where('payment_status', $request->payment_status);
+        }
+
+        $bookings = $query->orderBy('created_at', 'desc')->paginate(20);
+
+        return response()->json([
+            'success' => true,
+            'data' => $bookings
+        ]);
+    }
+
+    /**
+     * Get single booking details
+     */
+    public function show(Request $request, $id)
+    {
+        $booking = Booking::where('id', $id)->orWhere('booking_number', $id)->first();
+
+        if (!$booking) {
+            return response()->json(['success' => false, 'message' => 'Booking not found'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $booking
+        ]);
+    }
+
+    /**
+     * Update booking details
+     */
+    public function update(Request $request, $id)
+    {
+        $booking = Booking::find($id);
+
+        if (!$booking) {
+            return response()->json(['success' => false, 'message' => 'Booking not found'], 404);
+        }
+
+        $booking->update($request->only([
+            'first_name', 'last_name', 'email', 'mobile', 'travel_date',
+            'room_type', 'notes', 'status', 'payment_status', 'order_stat',
+            'special_requests', 'total_amount'
+        ]));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking updated successfully',
+            'data' => $booking
+        ]);
+    }
+
+    /**
+     * Delete booking
+     */
+    public function destroy(Request $request, $id)
+    {
+        $booking = Booking::find($id);
+
+        if (!$booking) {
+            return response()->json(['success' => false, 'message' => 'Booking not found'], 404);
+        }
+
+        $booking->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Booking deleted successfully'
+        ]);
+    }
+
+    /**
+     * Check booking status
+     */
+    public function checkStatus(Request $request, $id = null)
+    {
+        $bookingId = $id ?? $request->input('booking_id') ?? $request->input('id') ?? $request->input('booking_number');
+        $booking = null;
+        if ($bookingId) {
+            $booking = Booking::where('id', $bookingId)->orWhere('booking_number', $bookingId)->first();
+        }
+        if (!$booking && $request->input('email')) {
+            $booking = Booking::where('email', $request->input('email'))->orderBy('created_at', 'desc')->first();
+        }
+
+        if (!$booking) {
+            return response()->json(['success' => false, 'message' => 'Booking not found'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'status' => $booking->status,
+            'payment_status' => $booking->payment_status,
+            'data' => $booking
+        ]);
     }
 
     public function paymentDetails($id)
