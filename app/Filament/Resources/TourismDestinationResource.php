@@ -287,7 +287,12 @@ class TourismDestinationResource extends Resource
                                         Forms\Components\TextInput::make('price')
                                             ->nullable()
                                             ->numeric()
+<<<<<<< Updated upstream
                                             ->label('Base Starting Price (SAR)')
+=======
+                                            ->label('Base Package Price (SAR)')
+                                            ->helperText('Main price displayed in list views. If left blank, automatically uses the first offer price.')
+>>>>>>> Stashed changes
                                             ->prefix('SAR')
                                             ->columnSpan(1),
                                         Forms\Components\TextInput::make('rating')
@@ -299,6 +304,29 @@ class TourismDestinationResource extends Resource
                                             ->maxValue(5)
                                             ->label('Rating (0-5)')
                                             ->columnSpan(1),
+                                        Forms\Components\Repeater::make('person_prices')
+                                            ->label('Person Offers & Pricing')
+                                            ->schema([
+                                                Forms\Components\TextInput::make('persons')
+                                                    ->label('Number of Persons')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->minValue(1)
+                                                    ->default(1)
+                                                    ->placeholder('e.g. 1, 2, 3, 4')
+                                                    ->columnSpan(1),
+                                                Forms\Components\TextInput::make('price')
+                                                    ->label('Offer Price (SAR)')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->prefix('SAR')
+                                                    ->placeholder('e.g. 4100.00')
+                                                    ->columnSpan(1),
+                                            ])
+                                            ->columns(2)
+                                            ->defaultItems(1)
+                                            ->createItemButtonLabel('Add Person Offer')
+                                            ->columnSpanFull(),
                                     ])->columns(2),
                             ]),
 
@@ -360,16 +388,6 @@ class TourismDestinationResource extends Resource
                     ->label('Price')
                     ->money('SAR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('double_room_price')
-                    ->label('Double Room')
-                    ->money('SAR')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('single_room_price')
-                    ->label('Single Room')
-                    ->money('SAR')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('rating')
                     ->label('Rating')
                     ->sortable()

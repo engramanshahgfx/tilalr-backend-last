@@ -347,6 +347,7 @@ class ReservationResource extends Resource
                             ->prefix('SAR'),
                     ])
                     ->action(function (Reservation $record, array $data) {
+<<<<<<< Updated upstream
                          $booking = \App\Models\Booking::create([
                              'booking_number' => \App\Models\Booking::generateBookingNumber(),
                              'user_id' => null,
@@ -368,6 +369,38 @@ class ReservationResource extends Resource
                              'status' => 'pending',
                              'payment_status' => 'pending',
                          ]);
+=======
+                        $nameParts = explode(' ', trim($record->name ?? 'Customer'), 2);
+                        $firstName = $record->details['first_name'] 
+                            ?? $record->details['company_name'] 
+                            ?? ($nameParts[0] ?? 'Customer');
+
+                        $lastName = $record->details['last_name'] 
+                            ?? ($nameParts[1] ?? 'Reservation');
+
+                        $packageId = $record->trip_slug ?? 'custom-reservation';
+                        $packageCode = $record->details['trip_code'] ?? ('RES-' . $record->id);
+                        $packageTitle = $record->trip_title ?? $record->details['package_name'] ?? 'Package Reservation';
+
+                        $booking = \App\Models\Booking::create([
+                            'booking_number' => \App\Models\Booking::generateBookingNumber(),
+                            'first_name' => $firstName,
+                            'last_name' => $lastName,
+                            'email' => $record->email ?: 'customer@example.com',
+                            'mobile' => $record->phone ?: 'N/A',
+                            'user_id' => $record->user_id,
+                            'travel_date' => $record->preferred_date,
+                            'package_id' => $packageId,
+                            'package_code' => $packageCode,
+                            'package_title' => $packageTitle,
+                            'guests' => $record->guests,
+                            'total_amount' => $data['amount'],
+                            'price' => $data['amount'],
+                            'status' => 'pending',
+                            'payment_status' => 'pending',
+                            'notes' => $record->notes,
+                        ]);
+>>>>>>> Stashed changes
                         
                         $record->update([
                             'status' => 'converted',

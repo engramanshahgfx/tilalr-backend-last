@@ -27,6 +27,8 @@ class TripResource extends Resource
 
     protected static ?string $model = Trip::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-flag';
 
     public static function getNavigationGroup(): ?string

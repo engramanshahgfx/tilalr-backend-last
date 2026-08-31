@@ -69,7 +69,25 @@ class TourismDestination extends Model
         'active' => 'boolean',
     ];
 
+<<<<<<< Updated upstream
     protected static function booted(): void
+=======
+    protected static function booted()
+    {
+        static::saving(function ($destination) {
+            if (is_array($destination->person_prices) && count($destination->person_prices) > 0) {
+                if (empty($destination->price) || floatval($destination->price) == 0) {
+                    $firstOffer = $destination->person_prices[0] ?? null;
+                    if ($firstOffer && isset($firstOffer['price'])) {
+                        $destination->price = floatval($firstOffer['price']);
+                    }
+                }
+            }
+        });
+    }
+
+    public function getRouteKeyName()
+>>>>>>> Stashed changes
     {
         static::saving(function ($model) {
             if (!empty($model->person_prices) && is_array($model->person_prices)) {

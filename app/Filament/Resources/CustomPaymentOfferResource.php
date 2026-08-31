@@ -20,6 +20,8 @@ class CustomPaymentOfferResource extends Resource
     protected static ?string $model = CustomPaymentOffer::class;
     protected static ?string $permissionKey = 'custom_payment_offers';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
     protected static ?int $navigationSort = 2;

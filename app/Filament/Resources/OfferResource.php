@@ -20,6 +20,8 @@ class OfferResource extends Resource
 
     protected static ?string $model = Offer::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     public static function getNavigationGroup(): ?string

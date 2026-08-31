@@ -47,12 +47,15 @@ class Booking extends Model
             if (empty($booking->booking_number)) {
                 $booking->booking_number = static::generateBookingNumber();
             }
+<<<<<<< Updated upstream
             if (empty($booking->first_name)) {
                 $booking->first_name = '';
             }
             if (empty($booking->last_name)) {
                 $booking->last_name = '';
             }
+=======
+>>>>>>> Stashed changes
         });
     }
 

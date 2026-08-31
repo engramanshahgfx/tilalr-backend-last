@@ -97,7 +97,25 @@ class BookingController extends Controller
         if ($request->filled('total_amount') && floatval($request->total_amount) > 0) {
             $totalAmount = floatval($request->total_amount);
         } else {
+<<<<<<< Updated upstream
             $totalAmount = $packagePrice * $guests;
+=======
+            $matchedOffer = null;
+            if ($package && !empty($package->person_prices) && is_array($package->person_prices)) {
+                foreach ($package->person_prices as $offer) {
+                    if (isset($offer['persons']) && intval($offer['persons']) === $guests && isset($offer['price'])) {
+                        $matchedOffer = floatval($offer['price']);
+                        break;
+                    }
+                }
+            }
+
+            if ($matchedOffer !== null) {
+                $totalAmount = $matchedOffer;
+            } else {
+                $totalAmount = $packagePrice * $guests;
+            }
+>>>>>>> Stashed changes
         }
         $price = $packagePrice > 0 ? $packagePrice : ($totalAmount / $guests);
 
