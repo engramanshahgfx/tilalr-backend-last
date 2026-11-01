@@ -1,0 +1,1497 @@
+{
+  "info": {
+    "name": "Tilal Rimal Mobile API",
+    "description": "API Collection for Tilal Rimal Mobile App (All Endpoints)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phone\": \"+966501234567\",\n  \"password\": \"SecurePassword123!\",\n  \"password_confirmation\": \"SecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/register",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
+            },
+            "description": "Register a new user account"
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"SecurePassword123!\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/login",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            },
+            "description": "Login with email and password to receive Bearer token"
+          },
+          "response": []
+        },
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+966501234567\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/auth/send-otp",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "send-otp"
+              ]
+            },
+            "description": "Send OTP code to phone number via SMS"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+966501234567\",\n  \"otp_code\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/auth/verify-otp",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "verify-otp"
+              ]
+            },
+            "description": "Verify OTP code and authenticate user"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+966501234567\",\n  \"otp_code\": \"123456\",\n  \"new_password\": \"NewPassword123!\",\n  \"new_password_confirmation\": \"NewPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/auth/reset-password",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
+            },
+            "description": "Reset password using OTP code"
+          },
+          "response": []
+        },
+        {
+          "name": "Check Email Exists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/users/exists?email=john.doe@example.com",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "exists"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "john.doe@example.com"
+                }
+              ]
+            },
+            "description": "Check if user email already exists"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/logout",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "logout"
+              ]
+            },
+            "description": "Logout current user and revoke token"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Profile",
+      "item": [
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/user",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user"
+              ]
+            },
+            "description": "Get current authenticated user profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe Updated\",\n  \"phone\": \"+966501234567\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/user/profile",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "profile"
+              ]
+            },
+            "description": "Update user profile details"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tourism Destinations",
+      "item": [
+        {
+          "name": "Get All Destinations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/tourism-destinations?type=international&page=1&per_page=20",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tourism-destinations"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "international"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Get tourism destinations list with optional search, region, and pagination filters"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Destination Navbar Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/tourism-destinations/navbar",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tourism-destinations",
+                "navbar"
+              ]
+            },
+            "description": "Get destinations categorized for app navigation menu"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Regions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/tourism-destinations/regions",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tourism-destinations",
+                "regions"
+              ]
+            },
+            "description": "Get available regions list"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Destinations By Region",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/tourism-destinations/region/Europe",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tourism-destinations",
+                "region",
+                "Europe"
+              ]
+            },
+            "description": "Get destinations filtered by region name"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Destination Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/tourism-destinations/maldives-paradise",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tourism-destinations",
+                "maldives-paradise"
+              ]
+            },
+            "description": "Get full details of a destination by slug"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Offers & Promotions",
+      "item": [
+        {
+          "name": "Get Tourism Offers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/tourism-offers",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tourism-offers"
+              ]
+            },
+            "description": "Get all active tourism offers"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tourism Offer Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/tourism-offers/1",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tourism-offers",
+                "1"
+              ]
+            },
+            "description": "Get single tourism offer details by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Jamoula Offers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/jamoula-offers",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "jamoula-offers"
+              ]
+            },
+            "description": "Get all Jamoula special offers"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Jamoula Offer Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/jamoula-offers/1",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "jamoula-offers",
+                "1"
+              ]
+            },
+            "description": "Get single Jamoula offer details by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Special Offers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/special-offers",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "special-offers"
+              ]
+            },
+            "description": "Get list of special featured offers"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Banners",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/banners",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "banners"
+              ]
+            },
+            "description": "Get promo banners for mobile slider"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Header Banners",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/headerbanners",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "headerbanners"
+              ]
+            },
+            "description": "Get main header banner image and title"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Guest Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"guest_name\": \"John Smith\",\n  \"guest_email\": \"johnsmith@example.com\",\n  \"guest_phone\": \"+966501234567\",\n  \"tourism_destination_id\": 1,\n  \"number_of_guests\": 2,\n  \"check_in_date\": \"2026-03-15\",\n  \"check_out_date\": \"2026-03-22\",\n  \"special_requests\": \"Window view requested\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/bookings/guest",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bookings",
+                "guest"
+              ]
+            },
+            "description": "Create booking for guests without authentication"
+          },
+          "response": []
+        },
+        {
+          "name": "Create User Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tourism_destination_id\": 1,\n  \"number_of_guests\": 2,\n  \"check_in_date\": \"2026-03-15\",\n  \"check_out_date\": \"2026-03-22\",\n  \"special_requests\": \"Quiet room\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/bookings",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bookings"
+              ]
+            },
+            "description": "Create booking for authenticated user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/bookings",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bookings"
+              ]
+            },
+            "description": "Get list of bookings made by logged in user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Booking Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/bookings/1001",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bookings",
+                "1001"
+              ]
+            },
+            "description": "Get single booking details by booking ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Check Guest Booking Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/bookings/1001/status",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bookings",
+                "1001",
+                "status"
+              ]
+            },
+            "description": "Check status of a guest booking"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Booking Payment Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/bookings/1001/payment-details",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "bookings",
+                "1001",
+                "payment-details"
+              ]
+            },
+            "description": "Get payment details for a specific booking"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Trips & Reservations",
+      "item": [
+        {
+          "name": "Get All Trips",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/trips",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "trips"
+              ]
+            },
+            "description": "Get list of available trips"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Trip Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/trips/caribbean-cruise",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "trips",
+                "caribbean-cruise"
+              ]
+            },
+            "description": "Get trip details by trip slug"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Trip Blocked Dates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/trips/caribbean-cruise/blocked-dates",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "trips",
+                "caribbean-cruise",
+                "blocked-dates"
+              ]
+            },
+            "description": "Get unavailable dates for a trip"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trip_id\": 1,\n  \"departure_date\": \"2026-03-20\",\n  \"number_of_guests\": 2,\n  \"contact_name\": \"John Doe\",\n  \"contact_phone\": \"+966501234567\",\n  \"contact_email\": \"john.doe@example.com\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/reservations",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "reservations"
+              ]
+            },
+            "description": "Submit a reservation request for a trip"
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Reservations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/my-reservations",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "my-reservations"
+              ]
+            },
+            "description": "Get authenticated user's reservations list"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Visas & International Services",
+      "item": [
+        {
+          "name": "Submit Saudi Visa Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"John Doe\",\n  \"passport_number\": \"A12345678\",\n  \"nationality\": \"British\",\n  \"phone\": \"+966501234567\",\n  \"email\": \"john.doe@example.com\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/visa-applications",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visa-applications"
+              ]
+            },
+            "description": "Submit application for Saudi Arabia Visa"
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Schengen Visa Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Jane Smith\",\n  \"destination_country\": \"France\",\n  \"passport_number\": \"B98765432\",\n  \"phone\": \"+966501234567\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/schengen-applications",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "schengen-applications"
+              ]
+            },
+            "description": "Submit application for Schengen Visa"
+          },
+          "response": []
+        },
+        {
+          "name": "Submit E-Visa Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Alice Johnson\",\n  \"country\": \"Turkey\",\n  \"phone\": \"+966501234567\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/evisa-applications",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "evisa-applications"
+              ]
+            },
+            "description": "Submit electronic visa application"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Visa Countries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/visa-countries",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visa-countries"
+              ]
+            },
+            "description": "Get available countries for visa assistance"
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Internet Package Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"country\": \"Japan\",\n  \"data_plan\": \"10GB - 30 Days\",\n  \"phone\": \"+966501234567\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/internet-packages",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "internet-packages"
+              ]
+            },
+            "description": "Request international internet / eSIM package"
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Private Jet Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"VIP Guest\",\n  \"departure_city\": \"Riyadh\",\n  \"destination_city\": \"Geneva\",\n  \"departure_date\": \"2026-04-01\",\n  \"passengers_count\": 4,\n  \"phone\": \"+966501234567\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/private-jet-requests",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "private-jet-requests"
+              ]
+            },
+            "description": "Request custom private jet charter flight"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments & Moyasar",
+      "item": [
+        {
+          "name": "Initiate Moyasar Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": 1001,\n  \"amount\": 2500,\n  \"callback_url\": \"http://localhost:8000/api/payments/callback\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/payments/moyasar/initiate",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "moyasar",
+                "initiate"
+              ]
+            },
+            "description": "Initiate Moyasar online payment transaction"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/payments/status/1001",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "status",
+                "1001"
+              ]
+            },
+            "description": "Get current status of a payment by booking ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Custom Payment Offer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/custom-payment-offers/link_abc123",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "custom-payment-offers",
+                "link_abc123"
+              ]
+            },
+            "description": "Get details of custom payment offer via unique link"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Content & General",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/health",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            },
+            "description": "Check if API backend server is operational"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/pages",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pages"
+              ]
+            },
+            "description": "Get cms static pages list"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Services",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/services",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "services"
+              ]
+            },
+            "description": "Get available company services"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cities",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/cities",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cities"
+              ]
+            },
+            "description": "Get cities list"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Testimonials",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/testimonials",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "testimonials"
+              ]
+            },
+            "description": "Get client testimonials and ratings"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/settings",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "settings"
+              ]
+            },
+            "description": "Get site and application global settings"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Partners",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{base_url}}/api/partners",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "partners"
+              ]
+            },
+            "description": "Get partner logos and list"
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Contact Form",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"phone\": \"+966501234567\",\n  \"message\": \"Hello, I would like to inquire about group travel packages.\"\n}"
+            },
+            "url": {
+              "raw": "http://{{base_url}}/api/contact",
+              "protocol": "http",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contact"
+              ]
+            },
+            "description": "Submit contact us inquiry message"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "localhost:8000",
+      "description": "Base domain/IP & port. Change to your live server (e.g. api.tilalr.com or your production IP)"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "description": "Authentication Bearer token received after login"
+    }
+  ]
+}

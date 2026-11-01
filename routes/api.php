@@ -37,6 +37,7 @@ Route::get('/health/db', [HealthController::class, 'dbTest']);
 // Public Coupon Check
 Route::post('/coupons/apply', [CouponController::class, 'apply']);
 Route::post('/v1/coupons/apply', [CouponController::class, 'apply']);
+<<<<<<< HEAD
 
 // Authentication (Public)
 Route::post('/register', [AuthController::class, 'register']);
@@ -46,6 +47,19 @@ Route::post('/auth/send-otp', [\App\Http\Controllers\Api\OtpController::class, '
 Route::post('/auth/verify-otp', [\App\Http\Controllers\Api\OtpController::class, 'verify']);
 Route::post('/auth/reset-password', [\App\Http\Controllers\Api\OtpController::class, 'resetPassword']);
 
+=======
+
+// Authentication (Public - Throttled for Security)
+Route::middleware('throttle:10,1')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/auth/send-otp', [\App\Http\Controllers\Api\OtpController::class, 'send']);
+    Route::post('/auth/verify-otp', [\App\Http\Controllers\Api\OtpController::class, 'verify']);
+    Route::post('/auth/reset-password', [\App\Http\Controllers\Api\OtpController::class, 'resetPassword']);
+});
+Route::get('/users/exists', [AuthController::class, 'emailExists'])->middleware('throttle:30,1');
+
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
 // Public Tourism Destinations
 Route::prefix('tourism-destinations')->group(function () {
     Route::get('/', [TourismDestinationController::class, 'index']);

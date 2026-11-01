@@ -270,13 +270,19 @@ class TourismDestinationResource extends Resource
                                                     ->numeric()
                                                     ->required()
                                                     ->minValue(1)
+<<<<<<< HEAD
                                                     ->label('Number of Persons (e.g. 1, 2, 3, 4...)')
                                                     ->placeholder('1')
                                                     ->columnSpan(1),
+=======
+                                                    ->label('Number of Persons (e.g., 1, 2, 3, 4...)')
+                                                    ->placeholder('1'),
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
                                                 Forms\Components\TextInput::make('price')
                                                     ->numeric()
                                                     ->required()
                                                     ->prefix('SAR')
+<<<<<<< HEAD
                                                     ->label('Discounted / Offer Price (SAR)')
                                                     ->placeholder('2500.00')
                                                     ->columnSpan(1),
@@ -292,11 +298,16 @@ class TourismDestinationResource extends Resource
                                                     ->helperText('Check to make this offer tier selected by default')
                                                     ->default(false)
                                                     ->columnSpan(1),
+=======
+                                                    ->label('Price for this Offer (SAR)')
+                                                    ->placeholder('2500.00'),
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
                                             ])
                                             ->columns(2)
                                             ->defaultItems(1)
                                             ->createItemButtonLabel('Add New Person Offer')
                                             ->columnSpanFull()
+<<<<<<< HEAD
                                             ->helperText('Add custom price tiers per number of persons (e.g. 1 Person = 2500 SAR offer, 3200 SAR original base).'),
                                         Forms\Components\TextInput::make('price')
                                             ->nullable()
@@ -310,6 +321,18 @@ class TourismDestinationResource extends Resource
                                             ->numeric()
                                             ->label('Original / Base Price (SAR)')
                                             ->helperText('Base price shown with strikethrough before discount.')
+=======
+                                            ->helperText('Add custom price tiers based on the number of persons (e.g. 1 Person = 2500 SAR, 2 Persons = 4000 SAR, etc.)'),
+                                        Forms\Components\TextInput::make('price')
+                                            ->nullable()
+                                            ->numeric()
+<<<<<<< Updated upstream
+                                            ->label('Base Starting Price (SAR)')
+=======
+                                            ->label('Base Package Price (SAR)')
+                                            ->helperText('Main price displayed in list views. If left blank, automatically uses the first offer price.')
+>>>>>>> Stashed changes
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
                                             ->prefix('SAR')
                                             ->columnSpan(1),
                                         Forms\Components\TextInput::make('rating')
@@ -321,6 +344,32 @@ class TourismDestinationResource extends Resource
                                             ->maxValue(5)
                                             ->label('Rating (0-5)')
                                             ->columnSpan(1),
+<<<<<<< HEAD
+=======
+                                        Forms\Components\Repeater::make('person_prices')
+                                            ->label('Person Offers & Pricing')
+                                            ->schema([
+                                                Forms\Components\TextInput::make('persons')
+                                                    ->label('Number of Persons')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->minValue(1)
+                                                    ->default(1)
+                                                    ->placeholder('e.g. 1, 2, 3, 4')
+                                                    ->columnSpan(1),
+                                                Forms\Components\TextInput::make('price')
+                                                    ->label('Offer Price (SAR)')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->prefix('SAR')
+                                                    ->placeholder('e.g. 4100.00')
+                                                    ->columnSpan(1),
+                                            ])
+                                            ->columns(2)
+                                            ->defaultItems(1)
+                                            ->createItemButtonLabel('Add Person Offer')
+                                            ->columnSpanFull(),
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
                                     ])->columns(2),
                             ]),
 

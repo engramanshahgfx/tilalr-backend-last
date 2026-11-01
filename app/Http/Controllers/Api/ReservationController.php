@@ -102,17 +102,59 @@ class ReservationController extends Controller
             }
         }
 
-        $validator = Validator::make($request->all(), [
+        // Normalize name, phone, preferred_date if sent via alternative keys
+        $firstName = $request->input('first_name');
+        $lastName = $request->input('last_name');
+        $companyName = $request->input('company_name');
+        $reservationType = $request->input('reservation_type', $companyName ? 'company' : 'individual');
+        $fullName = $companyName ?: ($request->input('name') ?: trim("{$firstName} {$lastName}"));
+
+        $phone = $request->input('phone') ?: $request->input('mobile') ?: $request->input('mobile_number');
+        $preferredDate = $request->input('preferred_date') ?: $request->input('preferred_travel_date');
+        
+        $adults = intval($request->input('number_of_adults', $request->input('adults', 1)));
+        $children = intval($request->input('number_of_children', $request->input('children', 0)));
+        $totalGuests = intval($request->input('guests')) ?: max(1, $adults + $children);
+
+        // Build details array incorporating all submitted fields
+        $inputDetails = is_array($request->input('details')) ? $request->input('details') : [];
+        $mergedDetails = array_merge([
+            'reservation_type' => $reservationType,
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'company_name' => $companyName,
+            'contact_person_name' => $request->input('contact_person_name'),
+            'company_cr_number' => $request->input('company_cr_number'),
+            'company_country' => $request->input('company_country'),
+            'company_location' => $request->input('company_location'),
+            'company_address' => $request->input('company_address'),
+            'company_passports_info' => $request->input('company_passports_info'),
+            'nationality' => $request->input('nationality'),
+            'passport_number' => $request->input('passport_number'),
+            'departure_city' => $request->input('departure_city'),
+            'number_of_adults' => $adults,
+            'number_of_children' => $children,
+            'room_type' => $request->input('room_type', 'Double'),
+            'hotel_preference' => $request->input('hotel_preference'),
+            'special_requests' => $request->input('special_requests'),
+            'package_name' => $request->input('package_name') ?: $request->input('trip_title'),
+            'destination' => $request->input('destination'),
+            'duration' => $request->input('duration'),
+            'trip_code' => $request->input('trip_code'),
+        ], $inputDetails);
+
+        $validator = Validator::make([
+            'name' => $fullName,
+            'email' => $request->input('email'),
+            'phone' => $phone,
+            'preferred_date' => $preferredDate,
+            'guests' => $totalGuests,
+        ], [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'trip_type' => 'nullable|string|in:activity,hotel,flight,package,school,corporate,family,private',
-            'trip_slug' => 'nullable|string|max:255',
-            'trip_title' => 'nullable|string|max:255',
-            'preferred_date' => 'nullable|date|after_or_equal:yesterday',
+            'phone' => 'nullable|string|max:30',
+            'preferred_date' => 'nullable|date',
             'guests' => 'nullable|integer|min:1|max:500',
-            'notes' => 'nullable|string|max:2000',
-            'details' => 'nullable|array',
         ]);
 
         if ($validator->fails()) {
@@ -122,21 +164,28 @@ class ReservationController extends Controller
             ], 422);
         }
 
-        // If a user is authenticated, prefer their account info and link the reservation
+        // Create reservation with status 'pending'
         $reservation = Reservation::create([
             'user_id' => $user?->id ?? null,
-            'name' => $user?->name ?? $request->name,
-            'email' => $user?->email ?? $request->email,
-            'phone' => $request->phone,
-            'trip_type' => $request->trip_type,
-            'trip_slug' => $request->trip_slug,
-            'trip_title' => $request->trip_title,
-            'preferred_date' => $request->preferred_date,
-            'guests' => $request->guests ?? 1,
-            'notes' => $request->notes,
-            'details' => $request->details,
+            'name' => $user?->name ?? $fullName,
+            'email' => $user?->email ?? $request->input('email'),
+            'phone' => $phone,
+            'trip_type' => $request->input('trip_type', 'package'),
+            'trip_slug' => $request->input('trip_slug'),
+            'trip_title' => $request->input('trip_title') ?: $request->input('package_name'),
+            'preferred_date' => $preferredDate,
+            'guests' => $totalGuests,
+            'notes' => $request->input('notes'),
+            'details' => $mergedDetails,
             'status' => 'pending',
         ]);
+
+        // Generate reference number: RES-2026-000123
+        $referenceNo = 'RES-' . date('Y') . '-' . str_pad($reservation->id, 6, '0', STR_PAD_LEFT);
+        $updatedDetails = is_array($reservation->details) ? $reservation->details : [];
+        $updatedDetails['reference_no'] = $referenceNo;
+        $reservation->details = $updatedDetails;
+        $reservation->save();
 
         // Send email notification to admin
         try {
@@ -153,17 +202,11 @@ class ReservationController extends Controller
             \Log::error('Failed to send user reservation confirmation: ' . $e->getMessage());
         }
 
-        // Debug log: show reservation created and linked user if any
-        try {
-            \Illuminate\Support\Facades\Log::info('Reservation created', ['reservation_id' => $reservation->id, 'user_id' => $reservation->user_id, 'email' => $reservation->email, 'phone' => $reservation->phone]);
-        } catch (\Throwable $e) {
-            // ignore logging errors
-        }
-
         return response()->json([
             'success' => true,
-            'reservation' => $reservation,
-            'message' => 'Your reservation request has been submitted successfully. Our team will contact you within 24 hours to confirm availability and next steps.'
+            'reference_no' => $referenceNo,
+            'reservation' => array_merge($reservation->toArray(), ['reference_no' => $referenceNo]),
+            'message' => 'Your reservation request has been submitted successfully. Our team will contact you as soon as possible.'
         ], 201);
     }
 

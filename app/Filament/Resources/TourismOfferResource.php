@@ -437,12 +437,20 @@ class TourismOfferResource extends Resource
                                             ->helperText('Add custom price tiers based on number of persons (e.g. 1 Person = 2500 SAR, 2 Persons = 4000 SAR, etc.)'),
 
                                         TextInput::make('price')
+<<<<<<< HEAD
                                             ->label('Base Starting Price (SAR)')
+=======
+<<<<<<< Updated upstream
+                                            ->label('Base Starting Price (SAR)')
+=======
+                                            ->label('Base Price (SAR)')
+>>>>>>> Stashed changes
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
                                             ->nullable()
                                             ->numeric()
                                             ->prefix('SAR')
-                                            ->default(0)
-                                            ->step(0.01),
+                                            ->step(0.01)
+                                            ->helperText('Main price displayed in list views. If left blank, automatically uses the first offer price.'),
 
                                         TextInput::make('original_price')
                                             ->label('Original Price (SAR)')
@@ -467,6 +475,30 @@ class TourismOfferResource extends Resource
                                             ->step(0.1)
                                             ->default(0)
                                             ->helperText('e.g., 4.8'),
+
+                                        Repeater::make('person_prices')
+                                            ->label('Person Offers & Pricing')
+                                            ->schema([
+                                                TextInput::make('persons')
+                                                    ->label('Number of Persons')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->minValue(1)
+                                                    ->default(1)
+                                                    ->placeholder('e.g. 1, 2, 3, 4')
+                                                    ->columnSpan(1),
+                                                TextInput::make('price')
+                                                    ->label('Offer Price (SAR)')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->prefix('SAR')
+                                                    ->placeholder('e.g. 2500.00')
+                                                    ->columnSpan(1),
+                                            ])
+                                            ->columns(2)
+                                            ->defaultItems(1)
+                                            ->createItemButtonLabel('Add Person Offer')
+                                            ->columnSpanFull(),
                                     ])->columns(2),
                             ]),
 

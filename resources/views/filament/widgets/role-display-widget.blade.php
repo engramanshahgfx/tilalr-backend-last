@@ -2,7 +2,7 @@
     @php
         $roleInfo = $this->getRoleInfo();
     @endphp
-    
+
     @if($roleInfo)
         <div class="flex items-center justify-between">
             <div>

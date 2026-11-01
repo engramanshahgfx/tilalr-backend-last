@@ -65,13 +65,23 @@ class TourismDestination extends Model
         'payment_methods' => 'array',
         'person_prices' => 'array',
         'price' => 'decimal:2',
+<<<<<<< HEAD
         'original_price' => 'decimal:2',
+=======
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
         'rating' => 'float',
         'available_to' => 'date',
         'active' => 'boolean',
     ];
 
+<<<<<<< HEAD
     protected static function booted(): void
+=======
+<<<<<<< Updated upstream
+    protected static function booted(): void
+=======
+    protected static function booted()
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
     {
         static::saving(function ($destination) {
             if (is_array($destination->person_prices) && count($destination->person_prices) > 0) {
@@ -85,6 +95,24 @@ class TourismDestination extends Model
         });
     }
 
+<<<<<<< HEAD
+=======
+    public function getRouteKeyName()
+>>>>>>> Stashed changes
+    {
+        static::saving(function ($model) {
+            if (!empty($model->person_prices) && is_array($model->person_prices)) {
+                $firstOffer = $model->person_prices[0] ?? null;
+                if ($firstOffer && isset($firstOffer['price'])) {
+                    if (empty($model->price) || floatval($model->price) == 0) {
+                        $model->price = floatval($firstOffer['price']);
+                    }
+                }
+            }
+        });
+    }
+
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
 
     private function decodeJsonArray($value): array
     {

@@ -25,6 +25,7 @@ class TourismOffer extends Model
         'image',
         'gallery',
         'price',
+        'person_prices',
         'original_price',
         'discount',
         'rating',
@@ -75,6 +76,10 @@ class TourismOffer extends Model
         // are stored as DOUBLE-encoded JSON strings and handled by explicit accessors/mutators below.
     ];
 
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
     protected static function booted(): void
     {
         static::saving(function ($model) {
@@ -83,6 +88,19 @@ class TourismOffer extends Model
                 if ($firstOffer && isset($firstOffer['price'])) {
                     if (empty($model->price) || floatval($model->price) == 0) {
                         $model->price = floatval($firstOffer['price']);
+<<<<<<< HEAD
+=======
+=======
+    protected static function booted()
+    {
+        static::saving(function ($offer) {
+            if (is_array($offer->person_prices) && count($offer->person_prices) > 0) {
+                if (empty($offer->price) || floatval($offer->price) == 0) {
+                    $firstOffer = $offer->person_prices[0] ?? null;
+                    if ($firstOffer && isset($firstOffer['price'])) {
+                        $offer->price = floatval($firstOffer['price']);
+>>>>>>> Stashed changes
+>>>>>>> 54ebecf6b7242dc5515172bc87b4895b853545c3
                     }
                 }
             }
